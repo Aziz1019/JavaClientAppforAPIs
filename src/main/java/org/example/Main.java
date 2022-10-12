@@ -114,11 +114,23 @@ public class Main {
                 .addHeader("appName", "Telegram 1.2")
                 .build();
         try {
+
+// jsonString is of type java.lang.String
+//            JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+// reader is of type java.io.Reader
+//            JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+// jsonReader is of type com.google.gson.stream.JsonReader
+//            JsonObject jsonObject = JsonParser.parseReader(jsonReader).getAsJsonObject();
+
             Response response = client.newCall(request).execute();
             if (response.code()==200){
-                JsonParser jsonParser = new JsonParser();
 
-                JsonObject object = (JsonObject) jsonParser.parse(new String(response.body().bytes()));
+                // Deprecated version
+//                JsonParser jsonParser = new JsonParser();
+//                JsonObject object = (JsonObject) jsonParser.parse(new String(response.body().bytes()));
+
+                JsonObject object = JsonParser.parseString(new String(response.body().bytes())).getAsJsonObject();
+
                 if (object.get("statusCode").getAsInt()==0){
                     accessToken=object.getAsJsonObject("object").get("accessToken").getAsString();
                     refreshToken=object.getAsJsonObject("object").get("refreshToken").getAsString();
@@ -172,9 +184,8 @@ public class Main {
         try {
             Response response = client.newCall(request).execute();
             if (response.code()==200){
-                JsonParser jsonParser = new JsonParser();
+                JsonObject object = JsonParser.parseString(new String(response.body().bytes())).getAsJsonObject();
 
-                JsonObject object = (JsonObject) jsonParser.parse(new String(response.body().bytes()));
                 if (object.get("statusCode").getAsInt()==0){
                     accessToken=object.getAsJsonObject("object").get("accessToken").getAsString();
                     refreshToken=object.getAsJsonObject("object").get("refreshToken").getAsString();
